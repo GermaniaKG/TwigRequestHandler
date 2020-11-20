@@ -1,6 +1,7 @@
 {
     "name": "germania-kg/twig-requesthandler",
     "description": "PSR-15 RequestHandler for rendering Twig templates",
+    "keywords": [ "twig", "psr15", "requesthandler", "templates"],
     "type": "library",
     "license": "MIT",
     "authors": [
