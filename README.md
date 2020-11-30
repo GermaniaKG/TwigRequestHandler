@@ -39,7 +39,13 @@ $request_handler = new TwigRequestHandler($twig, $psr17Factory);
 
 ## Usage
 
-Have a **ServerRequest** at hand and configure it with a *template* attribute and a *context* attribute:
+Have a **ServerRequest** at hand and configure it with a *template* attribute and a *context* attribute. 
+
+- The *template* attribute must be a *string* as required by Twig.
+- The *context* attribute must be an *array* as required by Twig; 
+  Instances of *ArrayObject* will be converted.
+
+**N.B.** Invalid variable types will lead to a *RuntimeException* at runtime on request handling, not during configuration!
 
 ```php
 <?php
