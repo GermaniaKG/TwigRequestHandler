@@ -68,6 +68,11 @@ class TwigRequestHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $context = $request->getAttribute($this->context_attribute_name, null);
+
+        if ($context instanceOf \ArrayObject) {
+            $context = $context->getArrayCopy();
+        }
+
         if (!is_array($context)) {
             $msg = sprintf(
                 "Expected Request attribute '%s' to be array, got '%s'.",
