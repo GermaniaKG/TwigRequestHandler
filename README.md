@@ -8,6 +8,14 @@
 
 
 
+[![Packagist](https://img.shields.io/packagist/v/germania-kg/twig-requesthandler.svg?style=flat)](https://packagist.org/packages/germania-kg/twig-requesthandler)
+[![PHP version](https://img.shields.io/packagist/php-v/germania-kg/twig-requesthandler.svg)](https://packagist.org/packages/germania-kg/twig-requesthandler)
+[![Build Status](https://img.shields.io/travis/GermaniaKG/TwigRequestHandler.svg?label=Travis%20CI)](https://travis-ci.org/GermaniaKG/TwigRequestHandler)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/GermaniaKG/TwigRequestHandler/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/GermaniaKG/TwigRequestHandler/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/GermaniaKG/TwigRequestHandler/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/GermaniaKG/TwigRequestHandler/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/GermaniaKG/TwigRequestHandler/badges/build.png?b=master)](https://scrutinizer-ci.com/g/GermaniaKG/TwigRequestHandler/build-status/master)
+
+
 ## Installation
 
 ```bash
@@ -39,7 +47,13 @@ $request_handler = new TwigRequestHandler($twig, $psr17Factory);
 
 ## Usage
 
-Have a **ServerRequest** at hand and configure it with a *template* attribute and a *context* attribute:
+Have a **ServerRequest** at hand and configure it with a *template* attribute and a *context* attribute. 
+
+- The *template* attribute must be a *string* as required by Twig.
+- The *context* attribute must be an *array* as required by Twig; 
+  Instances of *ArrayObject* will be converted.
+
+**N.B.** Invalid variable types will lead to a *RuntimeException* at runtime on request handling, not during configuration!
 
 ```php
 <?php
@@ -92,6 +106,14 @@ $request_handler->setTwig($twig)
 
 
 
+## Issues
+
+See [full issues list.][i0]
+
+[i0]: https://github.com/GermaniaKG/TwigRequestHandler/issues
+
+
+
 ## Development
 
 Grab and go using one of these:
@@ -99,5 +121,18 @@ Grab and go using one of these:
 ```bash
 $ git clone git@github.com:GermaniaKG/TwigRequestHandler.git
 $ gh repo clone GermaniaKG/TwigRequestHandler
+```
+
+
+
+
+## Unit tests
+
+Either copy `phpunit.xml.dist` to `phpunit.xml` and adapt to your needs, or leave as is. Run [PhpUnit](https://phpunit.de/) test or composer scripts like this:
+
+```bash
+$ composer test
+# or
+$ vendor/bin/phpunit
 ```
 
