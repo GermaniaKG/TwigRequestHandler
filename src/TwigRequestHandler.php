@@ -74,10 +74,11 @@ class TwigRequestHandler implements RequestHandlerInterface
         }
 
         if (!is_array($context)) {
+            $context_type = is_object($context) ? get_class($context) : gettype($context);
             $msg = sprintf(
-                "Expected Request attribute '%s' to be array, got '%s'.",
+                "Expected Request attribute '%s' to be array or ArrayObject, got '%s'.",
                 $this->context_attribute_name,
-                gettype($context)
+                $context_type
             );
             throw new \RuntimeException($msg);
         }
