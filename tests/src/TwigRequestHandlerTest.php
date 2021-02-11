@@ -28,7 +28,7 @@ class TwigRequestHandlerTest extends \PHPUnit\Framework\TestCase
         $this->request_factory = new ServerRequestFactory();
     }
 
-    public function testInstantiation()
+    public function testInstantiation() : TwigRequestHandler
     {
         $twig_mock = $this->prophesize( TwigEnvironment::class );
         $twig = $twig_mock->reveal();
@@ -39,29 +39,16 @@ class TwigRequestHandlerTest extends \PHPUnit\Framework\TestCase
         return $sut;
     }
 
+
     /**
      * @depends testInstantiation
+     * @dataProvider provideValidAttributes
      */
-    public function testRequestHandler( $sut )
+    public function testRequestHandler( $template_attr, $template, $context_attr, $context, $status, $content_type, TwigRequestHandler $sut )
     {
-        $render_result = 'foobar';
-        $template = 'template.twig';
-        $template_attr = 'template';
-        $context = array("foo" => "bar");
-        $context_attr = "context";
-        $status = 400;
-        $content_type = "text/xml";
-
         $twig_mock = $this->prophesize( TwigEnvironment::class );
-        $twig_mock->render(Argument::type('string'), Argument::type('array'))->willReturn($render_result);
+        $twig_mock->render(Argument::type('string'), Argument::type('array'))->willReturn('foobar');
         $twig = $twig_mock->reveal();
-
-
-        # These do not work?!
-        // $request_mock = $this->prophesize(ServerRequestInterface::class);
-        // $request_mock->getAttribute('template')->willReturn($template);
-        // $request_mock->getAttribute('context')->willReturn($context);
-        // $request = $request_mock->reveal();
 
         $request = $this->request_factory
                         ->createServerRequest("GET", "/")
@@ -81,12 +68,29 @@ class TwigRequestHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($status, $response->getStatusCode());
     }
 
+    public function provideValidAttributes() : array
+    {
+        $template_attr = 'template';
+        $template = 'template.twig';
+        $context_attr = "context";
+        $context = array("foo" => "bar");
+        $status = 400;
+        $content_type = "text/xml";
+
+        return array(
+            "Sane data"  => [ $template_attr, $template, $context_attr, $context, $status, $content_type]
+        );
+    }
+
+
+
+
 
     /**
      * @depends testInstantiation
      * @dataProvider provideInvalidAttributes
      */
-    public function testRequestHandlerExceptions( $template_attr, $template, $context_attr, $context, $sut )
+    public function testRequestHandlerExceptions( $template_attr, $template, $context_attr, $context, TwigRequestHandler $sut )
     {
         $render_result = 'foobar';
 
@@ -107,7 +111,7 @@ class TwigRequestHandlerTest extends \PHPUnit\Framework\TestCase
         $sut->handle($request);
     }
 
-    public function provideInvalidAttributes()
+    public function provideInvalidAttributes() : array
     {
         $render_result = 'foobar';
 
@@ -119,13 +123,13 @@ class TwigRequestHandlerTest extends \PHPUnit\Framework\TestCase
 
 
         return array(
-            [ $template_attr, null,      $context_attr, $context],
-            [ $template_attr, 99,        $context_attr, $context],
-            [ $template_attr, false,     $context_attr, $context],
+            "Invalid template: NULL"  => [ $template_attr, null,      $context_attr, $context],
+            "Invalid template: int"   => [ $template_attr, 99,        $context_attr, $context],
+            "Invalid template: FALSE" => [ $template_attr, false,     $context_attr, $context],
 
-            [ $template_attr, $template, $context_attr, null],
-            [ $template_attr, $template, $context_attr, 99],
-            [ $template_attr, $template, $context_attr, "str"],
+            "Invalid context: NULL"  => [ $template_attr, $template, $context_attr, null],
+            "Invalid context: int"   => [ $template_attr, $template, $context_attr, 99],
+            "Invalid context: FALSE" => [ $template_attr, $template, $context_attr, "str"],
         );
     }
 
